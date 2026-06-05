@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Batsie Mandi – Tech Specialist</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:       #050d1a;
+    --navy-mid:   #0a1628;
+    --navy-panel: #0d1e35;
+    --navy-card:  #101f38;
+    --blue:       #2979ff;
+    --blue-light: #5393ff;
+    --blue-glow:  rgba(41,121,255,0.35);
+    --blue-dim:   rgba(41,121,255,0.15);
+    --cyan:       #00e5ff;
+    --white:      #eef2ff;
+    --muted:      #6b82a8;
+    --border:     rgba(41,121,255,0.2);
+    --glow:       0 0 28px rgba(41,121,255,0.45);
+    --glow-sm:    0 0 12px rgba(41,121,255,0.3);
+    --font-mono:  'Space Mono', monospace;
+    --font-body:  'DM Sans', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--navy);
+    color: var(--white);
+    font-family: var(--font-body);
+    font-size: 16px;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* ── CUSTOM CURSOR ── */
+  .cursor {
+    position: fixed;
+    width: 10px; height: 10px;
+    background: var(--blue);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%,-50%);
+    transition: transform 0.1s, width 0.2s, height 0.2s, background 0.2s;
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 34px; height: 34px;
+    border: 1.5px solid var(--blue-light);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%,-50%);
+    transition: transform 0.18s ease, width 0.25s, height 0.25s, opacity 0.2s;
+    opacity: 0.6;
+  }
+  body:hover .cursor { opacity: 1; }
+
+  /* ── BACKGROUND GRID + PARTICLES ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(rgba(41,121,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(41,121,255,0.04) 1px, transparent 1px);
+    background-size: 56px 56px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  #particles {
+    position: fixed; inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 6vw;
+    background: rgba(5,13,26,0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-brand {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--blue-light);
+    letter-spacing: 1px;
+    text-decoration: none;
+  }
+  .nav-brand span { color: var(--cyan); }
+
+  .nav-links {
+    display: flex; gap: 32px; list-style: none;
+  }
+  .nav-links a {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+    position: relative;
+  }
+  .nav-links a:hover { color: var(--white); }
+  .nav-links a::before {
+    content: attr(data-num);
+    color: var(--blue);
+    margin-right: 5px;
+    font-size: 0.65rem;
+  }
+
+  .nav-github {
+    display: flex; align-items: center; gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 1px;
+    color: var(--blue-light);
+    text-decoration: none;
+    border: 1px solid var(--border);
+    padding: 8px 16px;
+    transition: border-color 0.2s, color 0.2s, box-shadow 0.2s;
+  }
+  .nav-github:hover { border-color: var(--blue); color: #fff; box-shadow: var(--glow-sm); }
+
+  /* ── SECTIONS ── */
+  section { position: relative; z-index: 1; }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    justify-content: center;
+    padding: 130px 6vw 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+  }
+  .hero-blob.b1 {
+    width: 600px; height: 600px;
+    right: -100px; top: -100px;
+    background: radial-gradient(circle, rgba(41,121,255,0.18), transparent 65%);
+    animation: drift 12s ease-in-out infinite;
+  }
+  .hero-blob.b2 {
+    width: 350px; height: 350px;
+    left: 10%; bottom: 5%;
+    background: radial-gradient(circle, rgba(0,229,255,0.1), transparent 65%);
+    animation: drift 15s ease-in-out infinite reverse;
+  }
+  @keyframes drift { 0%,100%{transform:translate(0,0)} 33%{transform:translate(20px,-20px)} 66%{transform:translate(-15px,15px)} }
+
+  .hero-tag {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 3px;
+    color: var(--blue);
+    margin-bottom: 24px;
+    animation: fadeUp 0.7s ease both;
+  }
+  .hero-tag::before { content: '// '; opacity: 0.5; }
+
+  .hero h1 {
+    font-family: var(--font-mono);
+    font-size: clamp(2.8rem, 6.5vw, 5.5rem);
+    font-weight: 700;
+    line-height: 1.08;
+    color: #fff;
+    margin-bottom: 10px;
+    animation: fadeUp 0.8s 0.08s ease both;
+  }
+  .hero h1 .name { color: var(--blue-light); }
+  .hero h1 .cursor-blink {
+    display: inline-block;
+    width: 4px; height: 0.85em;
+    background: var(--cyan);
+    margin-left: 6px;
+    vertical-align: middle;
+    animation: blink 1s step-end infinite;
+  }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+  .hero-role {
+    font-family: var(--font-body);
+    font-size: clamp(1rem, 2vw, 1.3rem);
+    font-weight: 300;
+    color: var(--muted);
+    margin-bottom: 28px;
+    letter-spacing: 0.5px;
+    animation: fadeUp 0.9s 0.16s ease both;
+  }
+  .hero-role strong { color: var(--cyan); font-weight: 500; }
+
+  .hero-desc {
+    max-width: 560px;
+    font-size: 1.05rem;
+    color: #7a91b8;
+    line-height: 1.75;
+    margin-bottom: 44px;
+    font-weight: 300;
+    animation: fadeUp 1s 0.22s ease both;
+  }
+
+  .hero-btns {
+    display: flex; gap: 16px; flex-wrap: wrap;
+    animation: fadeUp 1s 0.3s ease both;
+  }
+
+  .btn-primary {
+    background: var(--blue);
+    color: #fff;
+    text-decoration: none;
+    padding: 13px 32px;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
+    box-shadow: var(--glow-sm);
+  }
+  .btn-primary:hover { background: var(--blue-light); box-shadow: var(--glow); transform: translateY(-2px); }
+
+  .btn-ghost {
+    border: 1px solid var(--border);
+    color: var(--blue-light);
+    text-decoration: none;
+    padding: 13px 32px;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    transition: border-color 0.2s, color 0.2s, box-shadow 0.2s, transform 0.15s;
+  }
+  .btn-ghost:hover { border-color: var(--blue); color: #fff; box-shadow: var(--glow-sm); transform: translateY(-2px); }
+
+  /* scroll indicator */
+  .scroll-hint {
+    position: absolute;
+    bottom: 36px; left: 50%;
+    transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    opacity: 0.4;
+    animation: fadeUp 1s 0.8s ease both;
+  }
+  .scroll-hint span { font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); }
+  .scroll-line { width: 1px; height: 48px; background: linear-gradient(var(--blue), transparent); animation: scrollDrop 1.8s ease-in-out infinite; }
+  @keyframes scrollDrop { 0%{transform:scaleY(0);transform-origin:top} 50%{transform:scaleY(1);transform-origin:top} 51%{transform-origin:bottom} 100%{transform:scaleY(0);transform-origin:bottom} }
+
+  /* ── ABOUT ── */
+  #about { background: var(--navy-mid); padding: 100px 6vw; }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .about-photo-wrap {
+    position: relative;
+  }
+  .about-photo {
+    width: 100%;
+    aspect-ratio: 3/4;
+    background: var(--navy-card);
+    border: 1px solid var(--border);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 14px;
+    position: relative;
+    overflow: hidden;
+  }
+  .about-photo::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--blue-dim) 0%, transparent 60%);
+  }
+  .about-photo-icon { font-size: 5rem; filter: drop-shadow(0 0 20px var(--blue-glow)); }
+  .about-photo-label {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 3px;
+    color: var(--blue);
+    text-transform: uppercase;
+  }
+  /* corner accents */
+  .about-photo::after {
+    content: '';
+    position: absolute;
+    top: 12px; left: 12px;
+    width: 30px; height: 30px;
+    border-top: 2px solid var(--blue);
+    border-left: 2px solid var(--blue);
+  }
+  .corner-br {
+    position: absolute;
+    bottom: 12px; right: 12px;
+    width: 30px; height: 30px;
+    border-bottom: 2px solid var(--cyan);
+    border-right: 2px solid var(--cyan);
+    z-index: 2;
+  }
+
+  .section-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 14px;
+  }
+  .section-eyebrow::before { content: '// '; opacity: 0.5; }
+
+  .section-title {
+    font-family: var(--font-mono);
+    font-size: clamp(1.8rem, 3vw, 2.6rem);
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 20px;
+    line-height: 1.15;
+  }
+  .section-title em { font-style: normal; color: var(--blue-light); }
+
+  .about-text {
+    color: #7a91b8;
+    font-size: 1rem;
+    line-height: 1.8;
+    font-weight: 300;
+    margin-bottom: 16px;
+  }
+
+  .about-facts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 32px;
+  }
+  .fact {
+    border-left: 2px solid var(--blue);
+    padding-left: 14px;
+  }
+  .fact-val {
+    font-family: var(--font-mono);
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--blue-light);
+  }
+  .fact-lbl {
+    font-size: 0.8rem;
+    color: var(--muted);
+    letter-spacing: 0.5px;
+    margin-top: 2px;
+  }
+
+  /* ── SKILLS ── */
+  #skills { padding: 100px 6vw; background: var(--navy); }
+
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+    margin-top: 56px;
+  }
+
+  .skill-category {
+    background: var(--navy-panel);
+    border: 1px solid var(--border);
+    padding: 32px 28px;
+    transition: border-color 0.25s, box-shadow 0.25s, transform 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .skill-category::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--blue), var(--cyan));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s;
+  }
+  .skill-category:hover { border-color: var(--blue); box-shadow: var(--glow-sm); transform: translateY(-4px); }
+  .skill-category:hover::before { transform: scaleX(1); }
+
+  .skill-cat-icon { font-size: 2rem; margin-bottom: 16px; display: block; }
+  .skill-cat-name {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #fff;
+    margin-bottom: 20px;
+  }
+
+  .skill-item {
+    margin-bottom: 14px;
+  }
+  .skill-item:last-child { margin-bottom: 0; }
+  .skill-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+  .skill-name { font-size: 0.88rem; color: #a0b4cc; }
+  .skill-pct { font-family: var(--font-mono); font-size: 0.7rem; color: var(--blue-light); }
+  .skill-track { height: 3px; background: rgba(255,255,255,0.06); border-radius: 2px; }
+  .skill-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--blue), var(--cyan));
+    border-radius: 2px;
+    box-shadow: 0 0 8px var(--blue-glow);
+    width: 0;
+    transition: width 1.2s cubic-bezier(0.25,1,0.5,1);
+  }
+
+  /* ── PROJECTS ── */
+  #projects { padding: 100px 6vw; background: var(--navy-mid); }
+
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 24px;
+    margin-top: 56px;
+  }
+
+  .project-card {
+    background: var(--navy-card);
+    border: 1px solid var(--border);
+    position: relative;
+    transition: border-color 0.25s, box-shadow 0.25s, transform 0.2s;
+    overflow: hidden;
+  }
+  .project-card:hover { border-color: var(--blue); box-shadow: var(--glow); transform: translateY(-6px); }
+
+  .project-thumb {
+    height: 180px;
+    background: var(--navy-panel);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 3.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .project-thumb::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(to bottom, transparent 40%, var(--navy-card));
+  }
+  .project-thumb-bg {
+    position: absolute; inset: 0;
+    opacity: 0.15;
+  }
+
+  .project-body { padding: 24px 24px 28px; }
+
+  .project-tags {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    margin-bottom: 14px;
+  }
+  .ptag {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--blue-light);
+    border: 1px solid var(--blue-dim);
+    padding: 3px 9px;
+    background: rgba(41,121,255,0.05);
+  }
+
+  .project-title {
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 10px;
+    letter-spacing: 0.5px;
+  }
+
+  .project-desc {
+    font-size: 0.9rem;
+    color: var(--muted);
+    line-height: 1.7;
+    font-weight: 300;
+    margin-bottom: 20px;
+  }
+
+  .project-links {
+    display: flex; gap: 14px; align-items: center;
+  }
+  .project-link {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--blue-light);
+    text-decoration: none;
+    display: flex; align-items: center; gap: 6px;
+    transition: color 0.2s;
+  }
+  .project-link:hover { color: var(--cyan); }
+  .project-link svg { width: 13px; height: 13px; }
+
+  /* featured badge */
+  .project-badge {
+    position: absolute;
+    top: 14px; right: 14px;
+    font-family: var(--font-mono);
+    font-size: 0.55rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    background: var(--blue);
+    color: #fff;
+    padding: 4px 10px;
+    z-index: 2;
+  }
+
+  /* ── SERVICES ── */
+  #services { padding: 100px 6vw; background: var(--navy); }
+
+  .services-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2px;
+    margin-top: 56px;
+    border: 1px solid var(--border);
+  }
+
+  .svc {
+    background: var(--navy-panel);
+    padding: 36px 32px;
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    transition: background 0.2s;
+    overflow: hidden;
+  }
+  .svc:hover { background: #0f2040; }
+  .svc::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--blue), var(--cyan));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s;
+  }
+  .svc:hover::after { transform: scaleX(1); }
+
+  .svc-num {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 3px;
+    color: var(--blue);
+    opacity: 0.5;
+    margin-bottom: 16px;
+  }
+  .svc-icon { font-size: 2.2rem; margin-bottom: 16px; display: block; }
+  .svc h3 {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #fff;
+    margin-bottom: 12px;
+  }
+  .svc p { font-size: 0.9rem; color: var(--muted); line-height: 1.7; font-weight: 300; }
+
+  /* ── CONTACT ── */
+  #contact { padding: 100px 6vw; background: var(--navy-mid); }
+
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 70px;
+    align-items: start;
+    margin-top: 56px;
+  }
+
+  .contact-left h3 {
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    color: #fff;
+    margin-bottom: 14px;
+    letter-spacing: 0.5px;
+  }
+  .contact-left p { color: var(--muted); font-size: 0.95rem; line-height: 1.75; font-weight: 300; margin-bottom: 36px; }
+
+  .contact-item {
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 20px;
+  }
+  .ci-icon {
+    width: 40px; height: 40px;
+    border: 1px solid var(--border);
+    background: var(--navy-card);
+    display: grid; place-items: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .contact-item:hover .ci-icon { border-color: var(--blue); box-shadow: var(--glow-sm); }
+  .ci-text { font-size: 0.9rem; color: #8ea4c0; }
+  .ci-label { font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 2px; text-transform: uppercase; color: var(--blue); margin-bottom: 2px; }
+
+  .contact-form { display: flex; flex-direction: column; gap: 16px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  input, textarea, select {
+    background: var(--navy-card);
+    border: 1px solid var(--border);
+    color: var(--white);
+    padding: 13px 18px;
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    width: 100%;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    -webkit-appearance: none;
+  }
+  input:focus, textarea:focus, select:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(41,121,255,0.12); }
+  textarea { resize: vertical; min-height: 120px; }
+  select option { background: var(--navy-card); }
+  ::placeholder { color: #374f6b; }
+
+  .contact-form .btn-primary { cursor: pointer; border: none; width: fit-content; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--navy);
+    border-top: 1px solid var(--border);
+    padding: 30px 6vw;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 16px;
+    position: relative; z-index: 1;
+  }
+  .footer-left {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--muted);
+    letter-spacing: 1px;
+  }
+  .footer-left span { color: var(--blue-light); }
+  .footer-gh {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+    color: var(--muted);
+    text-decoration: none;
+    display: flex; align-items: center; gap: 8px;
+    transition: color 0.2s;
+  }
+  .footer-gh:hover { color: var(--blue-light); }
+
+  /* ── UTILS ── */
+  .divider { height: 1px; background: linear-gradient(90deg, transparent, var(--blue), transparent); opacity: 0.25; }
+
+  @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 860px) {
+    .about-grid, .contact-grid { grid-template-columns: 1fr; }
+    .about-photo-wrap { max-width: 320px; margin: 0 auto; }
+    .nav-links { display: none; }
+    .form-row { grid-template-columns: 1fr; }
+    body { cursor: auto; }
+    .cursor, .cursor-ring { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<canvas id="particles"></canvas>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-brand">&lt;<span>BatsieM</span> /&gt;</a>
+  <ul class="nav-links">
+    <li><a href="#about" data-num="01">About</a></li>
+    <li><a href="#skills" data-num="02">Skills</a></li>
+    <li><a href="#projects" data-num="03">Projects</a></li>
+    <li><a href="#services" data-num="04">Services</a></li>
+    <li><a href="#contact" data-num="05">Contact</a></li>
+  </ul>
+  <a href="https://github.com/BatsiMandi" target="_blank" class="nav-github">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+    github/BatsiMandi
+  </a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-blob b1"></div>
+  <div class="hero-blob b2"></div>
+
+  <div class="hero-tag">Tech Specialist — Zimbabwe</div>
+  <h1><span class="name">Batsie Mandi</span><span class="cursor-blink"></span></h1>
+  <div class="hero-role">I repair hardware, build software &amp; craft <strong>digital experiences.</strong></div>
+  <p class="hero-desc">
+    From diagnosing broken laptops to shipping full websites — I bring technical precision and creative thinking to every project. Based in Zimbabwe, serving clients locally and remotely.
+  </p>
+  <div class="hero-btns">
+    <a href="#projects" class="btn-primary">View My Work</a>
+    <a href="#contact" class="btn-ghost">Hire Me</a>
+  </div>
+
+  <div class="scroll-hint">
+    <span>scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-grid">
+    <div class="about-photo-wrap reveal">
+      <div class="about-photo">
+        <div class="about-photo-icon">👨‍💻</div>
+        <div class="about-photo-label">Batsie Mandi</div>
+      </div>
+      <div class="corner-br"></div>
+    </div>
+
+    <div>
+      <div class="section-eyebrow reveal">About Me</div>
+      <h2 class="section-title reveal reveal-delay-1">Turning tech problems into <em>clean solutions</em></h2>
+      <p class="about-text reveal reveal-delay-2">
+        I'm a tech specialist with a passion for making technology work — for everyone. Whether it's a client's cracked screen, a business needing its first website, or a PC running slower than it should, I show up with the tools and knowledge to fix it right.
+      </p>
+      <p class="about-text reveal reveal-delay-2">
+        Through <strong style="color:#fff">NextGenTech</strong>, I offer a full range of tech services to individuals and businesses across Zimbabwe. I believe great tech support isn't just about the fix — it's about leaving people more confident and capable than before.
+      </p>
+
+      <div class="about-facts reveal reveal-delay-3">
+        <div class="fact">
+          <div class="fact-val">500+</div>
+          <div class="fact-lbl">Devices Repaired</div>
+        </div>
+        <div class="fact">
+          <div class="fact-val">5★</div>
+          <div class="fact-lbl">Client Rating</div>
+        </div>
+        <div class="fact">
+          <div class="fact-val">24hr</div>
+          <div class="fact-lbl">Avg Turnaround</div>
+        </div>
+        <div class="fact">
+          <div class="fact-val">100%</div>
+          <div class="fact-lbl">Satisfaction</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-eyebrow reveal">Technical Skills</div>
+  <h2 class="section-title reveal reveal-delay-1">What I work with</h2>
+
+  <div class="skills-grid">
+
+    <div class="skill-category reveal">
+      <span class="skill-cat-icon">🔧</span>
+      <div class="skill-cat-name">Hardware</div>
+      <div class="skill-item">
+        <div class="skill-row"><span class="skill-name">Laptop Repair</span><span class="skill-pct">95%</span></div>
+        <div class="skill-track"><div class="skill-fill" data-w="95"></div></div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-row"><span class="skill-name">PC Assembly & Maintenance</span><span class="skill-pct">92%</span></div>
+        <div class="skill-track"><div class="skill-fill" data-w="92"></div></div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-row"><span class="skill-name">Hardware Diagnostics</span><span class="skill-pct">90%</span></div>
+        <div class="skill-track"><div class="skill-fill" data-w="90"></div></div>
+      </div>
+    </div>
+
+    <div class="skill-category reveal reveal-delay-1">
+      <span class="skill-cat-icon">🖥️</span>
+      <div class="skill-cat-name">Operating Systems</div>
+      <div class="skill-item">
+        <div class="skill-row"><span class="skill-name">Windows 10 / 11</span><span class="skill-pct">98%</span></div>
+        <div class="skill-track"><div class="skill-fill" data-w="98"></div></div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-row"><span class="skill-name">Microsoft 365 Setup</span><span class="skill-pct">95%</span></div>
+        <div class="skill-track"><div class="skill-fill" data-w="95"></div></div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-row"><span class="skill-name">Software Configuration</span><span class="skill-pct">93%</span></div>
+        <div class="skill-track"><div class="skill-fill" data-w="93"></div></div>
+      </div>
+    </div>
+
+    <div class="skill-category reveal reveal-delay-2">
+      <span class="skill-cat-icon">🌐</span>
+      <div class="skill-cat-name">Web Development</div>
+      <div class="skill-item">
+        <div class="skill-row"><span class="skill-name">HTML & CSS</span><span class="skill-pct">88%</span></div>
+        <div class="skill-track"><div class="skill-fill" data-w="88"></div></div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-row"><span class="skill-name">JavaScript</span><span class="skill-pct">80%</span></div>
+        <div class="skill-track"><div class="skill-fill" data-w="80"></div></div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-row"><span class="skill-name">Responsive Design</span><span class="skill-pct">85%</span></div>
+        <div class="skill-track"><div class="skill-fill" data-w="85"></div></div>
+      </div>
+    </div>
+
+    <div class="skill-category reveal reveal-delay-3">
+      <span class="skill-cat-icon">🛡️</span>
+      <div class="skill-cat-name">Security & Support</div>
+      <div class="skill-item">
+        <div class="skill-row"><span class="skill-name">Virus & Malware Removal</span><span class="skill-pct">96%</span></div>
+        <div class="skill-track"><div class="skill-fill" data-w="96"></div></div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-row"><span class="skill-name">Remote Support</span><span class="skill-pct">90%</span></div>
+        <div class="skill-track"><div class="skill-fill" data-w="90"></div></div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-row"><span class="skill-name">Data Recovery</span><span class="skill-pct">85%</span></div>
+        <div class="skill-track"><div class="skill-fill" data-w="85"></div></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-eyebrow reveal">Portfolio</div>
+  <h2 class="section-title reveal reveal-delay-1">Featured <em>Projects</em></h2>
+
+  <div class="projects-grid">
+
+    <div class="project-card reveal">
+      <div class="project-badge">Featured</div>
+      <div class="project-thumb" style="background: linear-gradient(135deg,#0d1e35,#130013);">
+        <span style="font-size:3.5rem;z-index:1">🏢</span>
+      </div>
+      <div class="project-body">
+        <div class="project-tags">
+          <span class="ptag">HTML</span><span class="ptag">CSS</span><span class="ptag">JavaScript</span>
+        </div>
+        <div class="project-title">NextGenTech — Business Website</div>
+        <p class="project-desc">A full business website for my own tech company. Features animated hero, services grid, contact form, and a custom SVG circuit-board logo. Black &amp; magenta tech aesthetic.</p>
+        <div class="project-links">
+          <a href="https://github.com/BatsiMandi" target="_blank" class="project-link">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+            View on GitHub
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card reveal reveal-delay-1">
+      <div class="project-thumb" style="background: linear-gradient(135deg,#0d1e35,#001a33);">
+        <span style="font-size:3.5rem;z-index:1">💻</span>
+      </div>
+      <div class="project-body">
+        <div class="project-tags">
+          <span class="ptag">Hardware</span><span class="ptag">Repair</span><span class="ptag">Diagnostics</span>
+        </div>
+        <div class="project-title">Laptop Repair & Recovery</div>
+        <p class="project-desc">Successfully diagnosed and repaired 500+ devices including screen replacements, motherboard fixes, data recovery from failed drives, and thermal paste replacements for overheating systems.</p>
+        <div class="project-links">
+          <a href="#contact" class="project-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>
+            Enquire
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card reveal reveal-delay-2">
+      <div class="project-thumb" style="background: linear-gradient(135deg,#0a1628,#001529);">
+        <span style="font-size:3.5rem;z-index:1">🔑</span>
+      </div>
+      <div class="project-body">
+        <div class="project-tags">
+          <span class="ptag">Windows</span><span class="ptag">Microsoft 365</span><span class="ptag">Setup</span>
+        </div>
+        <div class="project-title">Windows & Microsoft Activations</div>
+        <p class="project-desc">Provided genuine Windows OS and Microsoft 365 activation, setup, and full configuration for home users and small businesses. Includes email setup, OneDrive, Teams, and Office suite.</p>
+        <div class="project-links">
+          <a href="#contact" class="project-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>
+            Enquire
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card reveal">
+      <div class="project-thumb" style="background: linear-gradient(135deg,#050d1a,#0a1a30);">
+        <span style="font-size:3.5rem;z-index:1">🌐</span>
+      </div>
+      <div class="project-body">
+        <div class="project-tags">
+          <span class="ptag">HTML</span><span class="ptag">CSS</span><span class="ptag">JS</span><span class="ptag">Web Design</span>
+        </div>
+        <div class="project-title">Client Web Projects</div>
+        <p class="project-desc">Custom responsive websites built for local businesses — including landing pages, service showcases, and contact systems. Designed for performance, mobile compatibility, and SEO.</p>
+        <div class="project-links">
+          <a href="https://github.com/BatsiMandi" target="_blank" class="project-link">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+            GitHub
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card reveal reveal-delay-1">
+      <div class="project-thumb" style="background: linear-gradient(135deg,#0a1628,#0d1e35);">
+        <span style="font-size:3.5rem;z-index:1">📦</span>
+      </div>
+      <div class="project-body">
+        <div class="project-tags">
+          <span class="ptag">Software</span><span class="ptag">Installation</span><span class="ptag">Configuration</span>
+        </div>
+        <div class="project-title">Software Deployment & Setup</div>
+        <p class="project-desc">End-to-end software installation and configuration for clients — productivity apps, antivirus, accounting tools, design software, and custom business applications set up and ready to use.</p>
+        <div class="project-links">
+          <a href="#contact" class="project-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>
+            Enquire
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card reveal reveal-delay-2" style="border-color: rgba(41,121,255,0.35); background: #0b1c33;">
+      <div class="project-thumb" style="background: linear-gradient(135deg,#0d2040,#162d4a);">
+        <span style="font-size:3rem;z-index:1">🚀</span>
+      </div>
+      <div class="project-body">
+        <div class="project-tags">
+          <span class="ptag">Open to Work</span>
+        </div>
+        <div class="project-title">Your Project Here</div>
+        <p class="project-desc">Got a website to build, a laptop to fix, or software to set up? Let's add your project to this portfolio. Reach out and let's get started.</p>
+        <div class="project-links">
+          <a href="#contact" class="project-link" style="color:var(--cyan)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+            Start a Project
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="section-eyebrow reveal">What I Offer</div>
+  <h2 class="section-title reveal reveal-delay-1">My <em>Services</em></h2>
+
+  <div class="services-list">
+    <div class="svc reveal">
+      <div class="svc-num">01</div>
+      <span class="svc-icon">💻</span>
+      <h3>Laptop Repairs</h3>
+      <p>Screen replacements, keyboard repairs, battery swaps, overheating fixes, and full hardware diagnostics for all major brands.</p>
+    </div>
+    <div class="svc reveal reveal-delay-1">
+      <div class="svc-num">02</div>
+      <span class="svc-icon">🖥️</span>
+      <h3>PC Maintenance</h3>
+      <p>Virus removal, performance tune-ups, hardware upgrades, dust cleaning, and system optimisation to keep your PC running at full speed.</p>
+    </div>
+    <div class="svc reveal reveal-delay-2">
+      <div class="svc-num">03</div>
+      <span class="svc-icon">🔑</span>
+      <h3>Windows & MS Activation</h3>
+      <p>Genuine Windows OS activation, Microsoft 365 licensing, Office configuration, and full Microsoft ecosystem setup for home and business.</p>
+    </div>
+    <div class="svc reveal">
+      <div class="svc-num">04</div>
+      <span class="svc-icon">📦</span>
+      <h3>Software Installations</h3>
+      <p>Any software installed and configured correctly — productivity tools, antivirus, creative apps, or custom business software.</p>
+    </div>
+    <div class="svc reveal reveal-delay-1">
+      <div class="svc-num">05</div>
+      <span class="svc-icon">🌐</span>
+      <h3>Website Building</h3>
+      <p>Custom, responsive, fast-loading websites for businesses and individuals — from concept and design through to deployment and go-live.</p>
+    </div>
+    <div class="svc reveal reveal-delay-2">
+      <div class="svc-num">06</div>
+      <span class="svc-icon">⚡</span>
+      <h3>Remote & Emergency Support</h3>
+      <p>Same-day and remote desktop support for urgent issues. Fast response, no hassle — wherever you are in Zimbabwe.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-eyebrow reveal">Get In Touch</div>
+  <h2 class="section-title reveal reveal-delay-1">Let's work <em>together</em></h2>
+
+  <div class="contact-grid">
+    <div class="contact-left reveal">
+      <h3>Ready to start a project?</h3>
+      <p>Whether you need a repair, a new website, or software support — I'm here. Send a message and I'll get back to you with a fast, free quote.</p>
+
+      <div class="contact-item">
+        <div class="ci-icon">📍</div>
+        <div><div class="ci-label">Location</div><div class="ci-text">Zimbabwe — On-site &amp; Remote</div></div>
+      </div>
+      <div class="contact-item">
+        <div class="ci-icon">📞</div>
+        <div><div class="ci-label">Phone / WhatsApp</div><div class="ci-text">Available on request</div></div>
+      </div>
+      <div class="contact-item">
+        <div class="ci-icon">📧</div>
+        <div><div class="ci-label">Email</div><div class="ci-text">batsie@nextgentech.co</div></div>
+      </div>
+      <div class="contact-item">
+        <div class="ci-icon">💻</div>
+        <div><div class="ci-label">GitHub</div><div class="ci-text">github.com/BatsiMandi</div></div>
+      </div>
+    </div>
+
+    <form class="contact-form reveal reveal-delay-1" onsubmit="handleSubmit(event)">
+      <div class="form-row">
+        <input type="text" placeholder="Your Name" required>
+        <input type="email" placeholder="Email Address" required>
+      </div>
+      <select>
+        <option value="" disabled selected>What do you need help with?</option>
+        <option>Laptop Repair</option>
+        <option>PC Maintenance</option>
+        <option>Windows / Microsoft Activation</option>
+        <option>Software Installation</option>
+        <option>Website Building</option>
+        <option>Remote / Emergency Support</option>
+        <option>Other</option>
+      </select>
+      <textarea placeholder="Tell me about your project or issue..."></textarea>
+      <button type="submit" class="btn-primary">Send Message →</button>
+    </form>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-left">© 2025 <span>Batsie Mandi</span> — All rights reserved.</div>
+  <a href="https://github.com/BatsiMandi" target="_blank" class="footer-gh">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+    github.com/BatsiMandi
+  </a>
+</footer>
+
+<script>
+// ── CUSTOM CURSOR ──
+const cur = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; cur.style.left = mx+'px'; cur.style.top = my+'px'; });
+function animRing() { rx += (mx-rx)*0.12; ry += (my-ry)*0.12; ring.style.left = rx+'px'; ring.style.top = ry+'px'; requestAnimationFrame(animRing); }
+animRing();
+document.querySelectorAll('a,button,.project-card,.service-card,.svc').forEach(el => {
+  el.addEventListener('mouseenter', () => { cur.style.transform='translate(-50%,-50%) scale(2)'; ring.style.opacity='0.2'; });
+  el.addEventListener('mouseleave', () => { cur.style.transform='translate(-50%,-50%) scale(1)'; ring.style.opacity='0.6'; });
+});
+
+// ── PARTICLES ──
+const canvas = document.getElementById('particles');
+const ctx = canvas.getContext('2d');
+let W, H, dots = [];
+function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+resize();
+window.addEventListener('resize', resize);
+for (let i = 0; i < 55; i++) {
+  dots.push({ x: Math.random()*W, y: Math.random()*H, vx: (Math.random()-0.5)*0.25, vy: (Math.random()-0.5)*0.25, r: Math.random()*1.5+0.5, o: Math.random()*0.4+0.1 });
+}
+function drawParticles() {
+  ctx.clearRect(0,0,W,H);
+  dots.forEach(d => {
+    d.x += d.vx; d.y += d.vy;
+    if (d.x < 0) d.x = W; if (d.x > W) d.x = 0;
+    if (d.y < 0) d.y = H; if (d.y > H) d.y = 0;
+    ctx.beginPath(); ctx.arc(d.x,d.y,d.r,0,Math.PI*2);
+    ctx.fillStyle = `rgba(41,121,255,${d.o})`; ctx.fill();
+  });
+  // connect nearby
+  for (let i = 0; i < dots.length; i++) {
+    for (let j = i+1; j < dots.length; j++) {
+      const dx = dots[i].x-dots[j].x, dy = dots[i].y-dots[j].y;
+      const dist = Math.sqrt(dx*dx+dy*dy);
+      if (dist < 120) {
+        ctx.beginPath();
+        ctx.moveTo(dots[i].x,dots[i].y);
+        ctx.lineTo(dots[j].x,dots[j].y);
+        ctx.strokeStyle = `rgba(41,121,255,${0.12*(1-dist/120)})`;
+        ctx.lineWidth = 0.6;
+        ctx.stroke();
+      }
+    }
+  }
+  requestAnimationFrame(drawParticles);
+}
+drawParticles();
+
+// ── SCROLL REVEAL ──
+const revealEls = document.querySelectorAll('.reveal');
+const ro = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); ro.unobserve(e.target); } });
+}, { threshold: 0.12 });
+revealEls.forEach(el => ro.observe(el));
+
+// ── SKILL BARS ──
+const skillObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.querySelectorAll('.skill-fill').forEach(bar => {
+        bar.style.width = bar.dataset.w + '%';
+      });
+      skillObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.3 });
+document.querySelectorAll('.skill-category').forEach(el => skillObs.observe(el));
+
+// ── CONTACT FORM ──
+function handleSubmit(e) {
+  e.preventDefault();
+  const btn = e.target.querySelector('button');
+  btn.textContent = 'Message Sent ✓';
+  btn.style.background = '#0d6e0d';
+  btn.style.boxShadow = '0 0 16px rgba(0,200,0,0.3)';
+  setTimeout(() => {
+    btn.textContent = 'Send Message →';
+    btn.style.background = '';
+    btn.style.boxShadow = '';
+    e.target.reset();
+  }, 3500);
+}
+
+// ── ACTIVE NAV ──
+const sections = document.querySelectorAll('section[id]');
+const navAs = document.querySelectorAll('.nav-links a');
+window.addEventListener('scroll', () => {
+  let cur = '';
+  sections.forEach(s => { if (window.scrollY >= s.offsetTop - 110) cur = s.id; });
+  navAs.forEach(a => { a.style.color = a.getAttribute('href') === '#'+cur ? 'var(--white)' : ''; });
+});
+</script>
+</body>
+</html>
